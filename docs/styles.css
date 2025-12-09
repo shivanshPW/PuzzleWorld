@@ -32,6 +32,8 @@ body {
 
 /* Home Screen Styles */
 .home-container {
+    position: relative;
+    z-index: 1;
     text-align: center;
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
@@ -171,7 +173,9 @@ body {
 
 /* Game Container Styles */
 .game-container {
-    background: rgba(16, 16, 32, 0.9);
+    position: relative;
+    z-index: 1;
+    background: rgb(92 107 152 / 36%);
     border-radius: 20px;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
     padding: 30px;
