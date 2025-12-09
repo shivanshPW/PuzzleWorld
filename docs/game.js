@@ -1,12 +1,12 @@
 // Game Configuration
 const TILE_SIZE = 50;
 const COLORS = {
-    wall: '#2d6a4f',        // Green walls (world environment)
-    walkable: '#caf0f8',    // Whitish-blue walkable areas
-    player: '#4361ee',      // Blue player
-    collectible: '#ffd60a', // Yellow collectibles
-    exit: '#9d4edd',        // Purple exit
-    collected: '#caf0f8'    // Same as walkable when collected
+    wall: '#1a1a2e',        // Dark Navy
+    walkable: '#16213e',    // Slightly lighter dark blue
+    player: '#00f2ff',      // Cyan
+    collectible: '#ff0055', // Pink
+    exit: '#7000ff',        // Purple
+    collected: '#16213e'    // Same as walkable
 };
 
 // Level Data
@@ -332,25 +332,25 @@ class Game {
 
         // Draw base
         if (tile === '1') {
-            // Wall - green
+            // Wall - Dark Navy with Neon Border
             this.ctx.fillStyle = COLORS.wall;
             this.ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
             
-            // Add border for depth
-            this.ctx.strokeStyle = '#1b4332';
-            this.ctx.lineWidth = 2;
+            // Neon Border
+            this.ctx.strokeStyle = '#00f2ff'; // Cyan
+            this.ctx.lineWidth = 1;
             this.ctx.strokeRect(px, py, TILE_SIZE, TILE_SIZE);
             
-            // Inner highlight
-            this.ctx.fillStyle = '#40916c';
+            // Inner glow
+            this.ctx.fillStyle = 'rgba(0, 242, 255, 0.1)';
             this.ctx.fillRect(px + 5, py + 5, TILE_SIZE - 10, TILE_SIZE - 10);
         } else {
-            // Walkable - whitish blue
+            // Walkable - Darker Blue
             this.ctx.fillStyle = COLORS.walkable;
             this.ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
             
-            // Grid lines
-            this.ctx.strokeStyle = '#ade8f4';
+            // Faint Grid lines
+            this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
             this.ctx.lineWidth = 1;
             this.ctx.strokeRect(px, py, TILE_SIZE, TILE_SIZE);
         }
@@ -358,47 +358,42 @@ class Game {
         // Draw exit
         if (tile === 'E') {
             const allCollected = this.collectedItems.size === this.collectibles.length;
-            this.ctx.fillStyle = allCollected ? COLORS.exit : '#555';
+            this.ctx.fillStyle = allCollected ? COLORS.exit : '#333';
             
-            // Draw door shape
-            this.ctx.fillRect(px + 10, py + 5, TILE_SIZE - 20, TILE_SIZE - 10);
-            this.ctx.fillStyle = allCollected ? '#c77dff' : '#777';
-            this.ctx.fillRect(px + 15, py + 10, TILE_SIZE - 30, TILE_SIZE - 20);
+            // Draw portal shape
+            this.ctx.beginPath();
+            this.ctx.arc(px + TILE_SIZE/2, py + TILE_SIZE/2, TILE_SIZE/2 - 5, 0, Math.PI * 2);
+            this.ctx.fill();
             
-            // Draw handle
-            this.ctx.fillStyle = allCollected ? '#e0aaff' : '#999';
-            this.ctx.fillRect(px + TILE_SIZE - 20, py + TILE_SIZE / 2 - 3, 5, 6);
+            // Portal swirl
+            if (allCollected) {
+                this.ctx.strokeStyle = '#fff';
+                this.ctx.lineWidth = 2;
+                this.ctx.beginPath();
+                this.ctx.arc(px + TILE_SIZE/2, py + TILE_SIZE/2, TILE_SIZE/3, 0, Math.PI * 2);
+                this.ctx.stroke();
+            }
         }
 
         // Draw collectible
         if (tile === 'C') {
             const collectibleId = `${x}-${y}`;
             if (!this.collectedItems.has(collectibleId)) {
-                // Star/diamond shape
-                this.ctx.fillStyle = COLORS.collectible;
-                this.ctx.beginPath();
+                // Glowing Orb
                 const centerX = px + TILE_SIZE / 2;
                 const centerY = py + TILE_SIZE / 2;
-                const radius = 12;
                 
-                for (let i = 0; i < 5; i++) {
-                    const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
-                    const r = i % 2 === 0 ? radius : radius / 2;
-                    const pointX = centerX + r * Math.cos(angle);
-                    const pointY = centerY + r * Math.sin(angle);
-                    if (i === 0) {
-                        this.ctx.moveTo(pointX, pointY);
-                    } else {
-                        this.ctx.lineTo(pointX, pointY);
-                    }
-                }
-                this.ctx.closePath();
+                // Glow
+                this.ctx.shadowBlur = 10;
+                this.ctx.shadowColor = COLORS.collectible;
+                
+                this.ctx.fillStyle = COLORS.collectible;
+                this.ctx.beginPath();
+                this.ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
                 this.ctx.fill();
                 
-                // Outline
-                this.ctx.strokeStyle = '#ffc300';
-                this.ctx.lineWidth = 2;
-                this.ctx.stroke();
+                // Reset shadow
+                this.ctx.shadowBlur = 0;
             }
         }
     }
@@ -407,29 +402,23 @@ class Game {
         const px = x * TILE_SIZE;
         const py = y * TILE_SIZE;
         
-        // Draw player as a rounded square/character
+        // Glow
+        this.ctx.shadowBlur = 15;
+        this.ctx.shadowColor = COLORS.player;
+
+        // Draw player
         this.ctx.fillStyle = COLORS.player;
         this.ctx.beginPath();
         this.ctx.arc(px + TILE_SIZE / 2, py + TILE_SIZE / 2, 15, 0, 2 * Math.PI);
         this.ctx.fill();
         
-        // Border
-        this.ctx.strokeStyle = '#3a0ca3';
-        this.ctx.lineWidth = 3;
-        this.ctx.stroke();
+        // Reset shadow
+        this.ctx.shadowBlur = 0;
         
-        // Eyes
-        this.ctx.fillStyle = 'white';
+        // Inner detail
+        this.ctx.fillStyle = '#fff';
         this.ctx.beginPath();
-        this.ctx.arc(px + TILE_SIZE / 2 - 5, py + TILE_SIZE / 2 - 3, 3, 0, 2 * Math.PI);
-        this.ctx.arc(px + TILE_SIZE / 2 + 5, py + TILE_SIZE / 2 - 3, 3, 0, 2 * Math.PI);
-        this.ctx.fill();
-        
-        // Pupils
-        this.ctx.fillStyle = '#000';
-        this.ctx.beginPath();
-        this.ctx.arc(px + TILE_SIZE / 2 - 5, py + TILE_SIZE / 2 - 3, 1.5, 0, 2 * Math.PI);
-        this.ctx.arc(px + TILE_SIZE / 2 + 5, py + TILE_SIZE / 2 - 3, 1.5, 0, 2 * Math.PI);
+        this.ctx.arc(px + TILE_SIZE / 2, py + TILE_SIZE / 2, 5, 0, 2 * Math.PI);
         this.ctx.fill();
     }
 
@@ -441,12 +430,23 @@ class Game {
 
     winGame() {
         this.gameWon = true;
+        const score = Math.max(0, 200 - this.moves);
         document.getElementById('final-moves').textContent = this.moves;
-        document.getElementById('win-screen').classList.add('active');
+        document.getElementById('final-score').textContent = score;
+        
+        const winScreen = document.getElementById('win-screen');
+        winScreen.style.display = 'flex';
+        // Trigger reflow
+        winScreen.offsetHeight;
+        winScreen.classList.add('active');
     }
 
     hideWinScreen() {
-        document.getElementById('win-screen').classList.remove('active');
+        const winScreen = document.getElementById('win-screen');
+        winScreen.classList.remove('active');
+        setTimeout(() => {
+            winScreen.style.display = 'none';
+        }, 300);
     }
 }
 

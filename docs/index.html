@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>Maze Escape - JS Edition</title>
+    <title>Nebula Maze - Game</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="game-container">
         <div class="header">
-            <h1>🎮 Maze Escape</h1>
+            <a href="home.html" class="btn" style="position: absolute; top: 20px; left: 20px; padding: 8px 15px; font-size: 0.9rem;">🏠 Home</a>
+            <h1>Nebula Maze</h1>
             <div class="stats">
                 <div class="stat">
                     <span class="stat-label">Moves:</span>
@@ -29,7 +31,7 @@
         </div>
 
         <div class="controls">
-            <div class="level-selector">
+            <div class="level-selector" style="display: none;">
                 <label for="level-select">Level:</label>
                 <select id="level-select">
                     <option value="1">Level 1</option>
@@ -55,27 +57,16 @@
         </div>
 
         <!-- Win Screen -->
-        <div class="win-screen" id="win-screen">
+        <div class="win-screen" id="win-screen" style="display: none;">
             <div class="win-content">
                 <h2>🎉 Level Complete!</h2>
                 <p class="win-moves">Completed in <span id="final-moves">0</span> moves</p>
+                <p class="win-score">Score: <span id="final-score">0</span> / 200</p>
                 <div class="win-buttons">
-                    <button id="next-level-btn" class="btn btn-primary">Next Level</button>
-                    <button id="replay-btn" class="btn">Replay</button>
+                    <button id="next-level-btn" class="btn btn-primary">NEXT</button>
+                    <button id="replay-btn" class="btn">REPLAY</button>
                 </div>
             </div>
-        </div>
-
-        <!-- Instructions -->
-        <div class="instructions">
-            <h3>How to Play:</h3>
-            <ul>
-                <li>🟦 <strong>You</strong> - The player</li>
-                <li>🟨 <strong>Collectibles</strong> - Collect all to unlock the exit</li>
-                <li>🟪 <strong>Exit</strong> - Reach here after collecting all items</li>
-                <li>🟩 <strong>Walls</strong> - Can't pass through</li>
-            </ul>
-            <p><strong>Controls:</strong> Arrow keys, WASD, or touch controls on mobile</p>
         </div>
     </div>
 
