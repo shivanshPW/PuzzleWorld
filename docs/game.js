@@ -92,6 +92,9 @@ class Game {
         this.reset();
         this.setupControls();
         this.loadLevel(this.currentLevel);
+        
+        // Initialize PathFinder
+        this.pathfinder = new PathFinder(this);
     }
 
     reset() {
@@ -216,6 +219,11 @@ class Game {
                     this.movePlayer(0, -1);
                 }
             }
+        });
+
+        // Canvas click for pathfinding
+        this.canvas.addEventListener('click', (e) => {
+            this.pathfinder.handleClick(e);
         });
 
         // Reset button
