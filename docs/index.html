@@ -10,6 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <audio id="bgMusic" loop>
+        <source src="bg.mp3" type="audio/mpeg">
+    </audio>
+    
+    <button id="muteBtn" class="mute-btn" title="Toggle Music">🔊</button>
+    
     <div class="game-container">
         <div class="header">
             <a href="home.html" class="btn" style="position: absolute; top: 20px; left: 20px; padding: 8px 15px; font-size: 0.9rem;">🏠 Home</a>
@@ -70,6 +76,27 @@
         </div>
     </div>
 
+    <script>
+        // Background Music
+        const bgMusic = document.getElementById('bgMusic');
+        const muteBtn = document.getElementById('muteBtn');
+        bgMusic.volume = 0.2; // Adjust this value between 0.0 (silent) and 1.0 (full volume)
+        
+        let isMuted = false;
+        
+        // Auto-play with user interaction
+        document.addEventListener('click', () => {
+            bgMusic.play().catch(e => console.log('Audio play failed:', e));
+        }, { once: true });
+        
+        // Mute/Unmute toggle
+        muteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isMuted = !isMuted;
+            bgMusic.muted = isMuted;
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+        });
+    </script>
     <script src="game.js"></script>
     <script src="background.js"></script>
 </body>

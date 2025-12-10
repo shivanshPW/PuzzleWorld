@@ -287,6 +287,7 @@ class Game {
                 this.moves++;
                 this.updateUI();
                 this.render();
+                this.scrollToPlayer();
                 this.winGame();
                 return true;
             } else {
@@ -308,7 +309,40 @@ class Game {
 
         this.updateUI();
         this.render();
+        this.scrollToPlayer();
         return true;
+    }
+
+    scrollToPlayer() {
+        const canvas = this.canvas;
+        const canvasRect = canvas.getBoundingClientRect();
+        const playerPixelX = this.player.x * TILE_SIZE + TILE_SIZE / 2;
+        const playerPixelY = this.player.y * TILE_SIZE + TILE_SIZE / 2;
+        
+        // Calculate player position relative to viewport
+        const playerScreenX = canvasRect.left + playerPixelX;
+        const playerScreenY = canvasRect.top + playerPixelY;
+        
+        const margin = 150; // Increased margin for earlier scrolling
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        // Always keep player reasonably centered
+        const shouldScrollX = playerScreenX < margin || playerScreenX > viewportWidth - margin;
+        const shouldScrollY = playerScreenY < margin || playerScreenY > viewportHeight - margin;
+        
+        if (shouldScrollX || shouldScrollY) {
+            // Calculate target scroll position to center player
+            const targetScrollX = window.scrollX + playerScreenX - viewportWidth / 2;
+            const targetScrollY = window.scrollY + playerScreenY - viewportHeight / 2;
+            
+            // Smooth scroll with CSS scroll-behavior
+            window.scrollTo({
+                left: targetScrollX,
+                top: targetScrollY,
+                behavior: 'smooth'
+            });
+        }
     }
 
     render() {

@@ -8,6 +8,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <audio id="bgMusic" loop>
+        <source src="bg.mp3" type="audio/mpeg">
+    </audio>
+    
+    <button id="muteBtn" class="mute-btn" title="Toggle Music">🔊</button>
+    
     <div class="home-container">
         <h1 class="game-title">Nebula Maze</h1>
         <p class="game-subtitle">Navigate the cosmic labyrinth</p>
@@ -35,6 +41,26 @@
     </div>
 
     <script>
+        // Background Music
+        const bgMusic = document.getElementById('bgMusic');
+        const muteBtn = document.getElementById('muteBtn');
+        bgMusic.volume = 0.2; // Adjust this value between 0.0 (silent) and 1.0 (full volume)
+        
+        let isMuted = false;
+        
+        // Auto-play with user interaction
+        document.addEventListener('click', () => {
+            bgMusic.play().catch(e => console.log('Audio play failed:', e));
+        }, { once: true });
+        
+        // Mute/Unmute toggle
+        muteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isMuted = !isMuted;
+            bgMusic.muted = isMuted;
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+        });
+
         const modal = document.getElementById('how-to-play-modal');
         const btn = document.getElementById('how-to-play-btn');
         const span = document.getElementsByClassName("close-modal")[0];
